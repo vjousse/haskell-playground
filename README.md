@@ -1,1 +1,2 @@
 - `pratical-haskell`: [http://seanhess.github.io/2015/08/04/practical-haskell-getting-started.html](http://seanhess.github.io/2015/08/04/practical-haskell-getting-started.html)
+- `learn-you-a-haskell`: [http://learnyouahaskell.com](http://learnyouahaskell.com)
