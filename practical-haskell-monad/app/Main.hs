@@ -4,17 +4,24 @@ import Control.Monad
 import Data.Aeson (encode, toJSON)
 import Data.Time (getCurrentTime)
 import Lib
-import System.IO (readFile)
+import System.IO (hGetContents, openFile, readFile, IOMode (ReadMode))
+import System.Environment
+
+
+cat :: [String] -> IO ()
+cat (fileName:args) = do
+    handle <- openFile fileName ReadMode
+    contents <- hGetContents handle
+    putStr contents
+    cat args
+
+cat _ = putStr ""
+
 
 main :: IO ()
 main = do
-    let action = putStrLn "Coucou"
-    action
-    action
-    action
-    action
-    return ()
-
+    args <- getArgs
+    cat args
 
 ask :: IO ()
 ask = do
