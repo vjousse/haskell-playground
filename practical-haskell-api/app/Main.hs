@@ -1,11 +1,14 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Main where
 
-import Web.Scotty
+import qualified Web.Scotty as WS
+import Data.Monoid ((<>))
 
+main :: IO ()
 main = do
     putStrLn "Starting Server..."
 
-    scotty 3000 $ do
-        get "/hello" $ do
-            text "hello world!"
+    WS.scotty 3000 $ do
+        WS.get "/hello/:name" $ do
+            name <- WS.param "name"
+            WS.text ("hello " <> name <> "!")
