@@ -3,19 +3,9 @@ module Main where
 import Control.Monad
 import Data.Aeson (encode, toJSON)
 import Data.Time (getCurrentTime)
-import Lib
-import System.IO (hGetContents, openFile, readFile, IOMode (ReadMode))
+import Lib (cat)
 import System.Environment
 
-
-cat :: [String] -> IO ()
-cat (fileName:args) = do
-    handle <- openFile fileName ReadMode
-    contents <- hGetContents handle
-    putStr contents
-    cat args
-
-cat _ = putStr ""
 
 
 main :: IO ()
@@ -31,9 +21,9 @@ ask = do
     number <- getLine
     let num = read number :: Int
 
-    putStrLn $ concatMap (\n -> name ++ "\n") [1..num]
+    putStrLn $ concatMap (\_ -> name ++ "\n") [1..num]
 
-    mapM (\n -> putStrLn $ name) [1..num]
+    mapM_ (\_ -> putStrLn $ name) [1..num]
 
     putStrLn "\n"
 
@@ -51,8 +41,7 @@ printConfig = do
     putStrLn contents
 
 printNumbers :: IO ()
-printNumbers = do
-    putStrLn (show (3+4))
+printNumbers = putStrLn $ show $ ((3+4) :: Int)
 
 printTime :: IO ()
 printTime = do
@@ -64,12 +53,6 @@ printJSON :: IO ()
 printJSON = do
     print $ encode $ toJSON numbers
 
-
-beCareful :: Maybe Int
-beCareful = do
-    Just 6
-    Nothing
-    return 5
 
 sayHello :: IO String
 sayHello = do
