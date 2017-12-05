@@ -30,6 +30,7 @@ executable practical-haskell-api-exe
   build-depends:       base
                      , practical-haskell-api
                      , scotty
+                     , aeson
   default-language:    Haskell2010
 
 test-suite practical-haskell-api-test
