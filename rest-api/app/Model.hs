@@ -1,4 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 
 module Model
     ( Checklist(..)
@@ -19,7 +20,7 @@ instance FromRow Checklist where
     fromRow = Checklist <$> field <*> field <*> pure []
 
 instance ToRow Checklist where
-    toRow c = [toField $ title c]
+    toRow c = [toField $ title (c :: Checklist)]
 
 instance ToJSON Checklist
 instance FromJSON Checklist
@@ -34,9 +35,28 @@ instance FromRow ChecklistItem where
     fromRow = ChecklistItem <$> field <*> field <*> field <*> field
 
 instance ToRow ChecklistItem where
-    toRow i = [toField $ itemText i, toField $ finished i, toField $ checklist i]
+    toRow i = [toField $ itemText (i :: ChecklistItem), toField $ finished (i :: ChecklistItem), toField $ checklist ( i :: ChecklistItem) ]
 
 instance ToJSON ChecklistItem
 
 instance FromJSON ChecklistItem
 
+
+data ChecklistRawSql = ChecklistRawSql {
+    checklistId :: Maybe Int,
+    title :: String,
+    checklistItemId :: Maybe Int,
+    itemText :: String,
+    finished :: Bool,
+    checklist :: Int } deriving (Show, Generic)
+
+
+instance FromRow ChecklistRawSql where
+    fromRow = ChecklistRawSql <$> field <*> field <*> field <*> field <*> field <*> field
+
+instance ToRow ChecklistRawSql where
+    toRow c = [toField $ (title :: ChecklistRawSql -> String) c]
+
+instance ToJSON ChecklistRawSql
+
+instance FromJSON ChecklistRawSql

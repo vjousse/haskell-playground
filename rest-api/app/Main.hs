@@ -20,6 +20,8 @@ server conn = do
 selectChecklistQuery = "select id, name, finished, checklist from checklistitems where checklist = (?)"
 insertItemsQuery = "insert into checklistitems (name, finished, checklist) values (?, ?, ?) returning id"
 
+selectChecklistJoinQuery = "select l.id, l.title, i.id, i.name, i.finished, i.checklist from checklists as l left join checklistitems as i on l.id=i.checklist group by l.id,i.id order by l.id"
+
 setArray :: Connection -> Checklist -> IO Checklist
 setArray conn check = do
     items <- liftIO (query conn selectChecklistQuery (Only $ checklistId check) :: IO [ChecklistItem])
