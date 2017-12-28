@@ -51,6 +51,7 @@ executable rest-api-exe
     , rest-api
   other-modules:
       Paths_rest_api
+      , Model
   default-language: Haskell2010
 
 test-suite rest-api-test
