@@ -4,6 +4,7 @@
 module Model
     ( Checklist(..)
     , ChecklistItem(..)
+    , ChecklistRawSql(..)
     ) where
 
 import Data.Aeson (FromJSON, ToJSON)

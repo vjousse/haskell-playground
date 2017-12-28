@@ -4,7 +4,7 @@ module Main where
 import Control.Monad.IO.Class (liftIO)
 import Database.PostgreSQL.Simple (Only(..), Connection, connectPostgreSQL, query_, query)
 import Web.Scotty as WS (ActionM, ScottyM, json, jsonData, get, post, scotty)
-import Model (Checklist(checklistItems, checklistId), ChecklistItem(checklistItemId))
+import Model (Checklist(checklistItems, checklistId), ChecklistItem(checklistItemId), ChecklistRawSql)
 
 server :: Connection -> ScottyM()
 server conn = do
@@ -12,6 +12,11 @@ server conn = do
         checklists <- liftIO (query_ conn "select id, title from checklists" :: IO [Checklist])
         checkWithItems <- liftIO (mapM (setArray conn) checklists)
         WS.json checkWithItems
+
+    WS.get "/checklistsjoin" $ do
+        checklists <- liftIO (query_ conn selectChecklistJoinQuery :: IO [ChecklistRawSql])
+        WS.json checklists
+
     WS.post "/checklistitems" $ do
         item <- WS.jsonData :: WS.ActionM ChecklistItem
         newItem <- liftIO (insertChecklist conn item)
