@@ -1,0 +1,69 @@
+-- This file has been generated from package.yaml by hpack version 0.20.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: be7e15601ff1d8b8343ad6d438dd55f37914df8c01564b906c9675d6efd6eeff
+
+name:           databases
+version:        0.1.0.0
+synopsis:       Short description of your package
+description:    Please see the README on Github at <https://github.com/githubuser/databases#readme>
+homepage:       https://github.com/githubuser/databases#readme
+bug-reports:    https://github.com/githubuser/databases/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2017 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+extra-source-files:
+    ChangeLog.md
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/databases
+
+library
+  hs-source-dirs:
+      src
+  build-depends:
+      HDBC
+    , HDBC-sqlite3
+    , base >=4.7 && <5
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_databases
+  default-language: Haskell2010
+
+executable databases-exe
+  main-is: Main.hs
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HDBC
+    , HDBC-sqlite3
+    , base >=4.7 && <5
+    , databases
+  other-modules:
+      Paths_databases
+  default-language: Haskell2010
+
+test-suite databases-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      HDBC
+    , HDBC-sqlite3
+    , base >=4.7 && <5
+    , databases
+  other-modules:
+      Paths_databases
+  default-language: Haskell2010
