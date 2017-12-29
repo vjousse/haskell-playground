@@ -2,7 +2,7 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f8b9462fbf54d7860383df36395da52adcb4964f34169fd4870ac1d624896c57
+-- hash: a9d0ef5ff22761f101685144587112ab47265ba2f21a38eb98410325889be1fb
 
 name:           podcatcher
 version:        0.1.0.0
@@ -46,6 +46,7 @@ executable podcatcher-exe
       base >=4.7 && <5
     , podcatcher
   other-modules:
+      PodTypes
       Paths_podcatcher
   default-language: Haskell2010
 
