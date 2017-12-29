@@ -3,9 +3,10 @@ module Main where
 
 import Control.Monad.IO.Class (liftIO)
 import Data.List (groupBy)
+import Data.Maybe (catMaybes, listToMaybe)
 import Database.PostgreSQL.Simple (Only(..), Connection, connectPostgreSQL, query_, query)
 import Web.Scotty as WS (ActionM, ScottyM, json, jsonData, get, post, scotty)
-import Model (Checklist(Checklist, checklistItems, checklistId), ChecklistItem(checklistItemId), ChecklistRawSql(sqlChecklistId))
+import Model (Checklist(Checklist, checklistItems, checklistId), ChecklistItem(ChecklistItem, checklistItemId), ChecklistRawSql(sqlChecklistId, sqlChecklistItemId, sqlItemText, sqlFinished, sqlChecklist, sqlTitle))
 
 server :: Connection -> ScottyM()
 server conn = do
@@ -38,16 +39,24 @@ insertChecklist conn item = do
     [Only id] <- query conn insertItemsQuery item
     return item { checklistItemId = id }
 
-reduceRawSqlChecklists :: [ChecklistRawSql] -> Checklist
+reduceRawSqlChecklists :: [ChecklistRawSql] -> Maybe Checklist
 reduceRawSqlChecklists rawLines =
-    Checklist (Just 1) "test" []
+    let
+        items = map (\i ->
+            ChecklistItem
+                (sqlChecklistItemId i)
+                (sqlItemText i)
+                (sqlFinished i)
+                (sqlChecklist i)) rawLines
+    in
+        listToMaybe $ map (\c -> Checklist (sqlChecklistId c) (sqlTitle c) items) rawLines
 
 mapRawSqlToChecklists :: [ChecklistRawSql] -> [Checklist]
 mapRawSqlToChecklists rawLines =
     let
         groupedLines = groupBy (\c1 c2 -> sqlChecklistId c1 == sqlChecklistId c2) rawLines
     in
-        map reduceRawSqlChecklists groupedLines
+        catMaybes $ map reduceRawSqlChecklists groupedLines
 
 main :: IO ()
 main = do
