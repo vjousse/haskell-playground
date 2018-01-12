@@ -1,13 +1,38 @@
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveGeneric #-}
 module Main where
 
-import Control.Lens
+import qualified Control.Lens as CL ((^.), (^?))
+import Data.Aeson (ToJSON, pairs, (.=), object, toJSON, toEncoding)
+import Data.Aeson.Lens (_String, key)
 import Data.ByteString (unpack)
+import Data.Monoid
 import Data.Text.Encoding        (decodeUtf8)
+import GHC.Generics
 import Lib
-import Network.Wreq (get, responseStatus, statusMessage)
+import Network.Wreq (get, post, responseBody, responseHeader, responseStatus, statusMessage)
+import System.Environment      (getEnv)
+
+data Credentials = Credentials {
+    login_id :: String
+  , password :: String
+} deriving (Generic,  Show)
+
+instance ToJSON Credentials where
+    toJSON (Credentials login_id password) =
+      object [ "login_id" .= login_id
+             , "password" .= password
+             ]
+    toEncoding(Credentials login_id password) =
+      pairs ("login_id" .= login_id <> "password" .= password)
 
 main :: IO ()
-main = do
-    r <- get "http://httpbin.org/get"
-    putStrLn $ show . decodeUtf8 $ r ^. responseStatus . statusMessage
+main = doPost
+
+doPost :: IO ()
+doPost = do
+    clientId <- getEnv "LOGIN_ID"
+    password <- getEnv "PASSWORD"
+    r <- post "https://chat.allo-media.net/api/v4/users/login" (toJSON $ Credentials clientId password)
+    putStrLn $ show $ r CL.^. responseBody . key "username" . _String
+    putStrLn $ show $ r CL.^. responseHeader "token"
