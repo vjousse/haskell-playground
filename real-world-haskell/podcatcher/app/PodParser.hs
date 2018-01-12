@@ -9,8 +9,7 @@ import Data.Char
 import Data.List
 
 data PodItem = PodItem {itemtitle :: String,
-                  enclosureurl :: String
-                  }
+                        enclosureurl :: String}
           deriving (Eq, Show, Read)
 
 data Feed = Feed {channeltitle :: String,
@@ -46,8 +45,7 @@ parse content name =
 
 {- | Pull out the channel part of the document.
 Note that HaXml defines CFilter as:
-> type CFilter i = Content i -> [Content i]
--}
+> type CFilter i = Content i -> [Content i] -}
 channel :: CFilter Posn
 channel = tag "rss" /> tag "channel"
 
