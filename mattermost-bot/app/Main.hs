@@ -33,6 +33,7 @@ doPost :: IO ()
 doPost = do
     clientId <- getEnv "LOGIN_ID"
     password <- getEnv "PASSWORD"
-    r <- post "https://chat.allo-media.net/api/v4/users/login" (toJSON $ Credentials clientId password)
+    url <- getEnv "URL"
+    r <- post url (toJSON $ Credentials clientId password)
     putStrLn $ show $ r CL.^. responseBody . key "username" . _String
     putStrLn $ show $ r CL.^. responseHeader "token"
