@@ -29,6 +29,7 @@ instance ToJSON Credentials where
 main :: IO ()
 main = doPost
 
+-- Should have a look at https://stackoverflow.com/questions/36361611/wreq-get-post-with-exception-handling
 doPost :: IO ()
 doPost = do
     clientId <- getEnv "LOGIN_ID"
